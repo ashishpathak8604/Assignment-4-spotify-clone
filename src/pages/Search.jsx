@@ -44,7 +44,7 @@ export default function Search() {
       <div className="flex-1 flex flex-col">
         <Topbar />
         <main className="flex-1 overflow-y-auto p-8">
-          <div className="mb-8">
+          {/* <div className="mb-8">
             <input
               type="text"
               className="w-full rounded-xl px-5 py-3 text-lg bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-pink-400 placeholder:text-white/60"
@@ -52,7 +52,7 @@ export default function Search() {
               value={query}
               onChange={e => setQuery(e.target.value)}
             />
-          </div>
+          </div> */}
           <div className="flex gap-4 mb-8">
             {['songs', 'albums', 'artists', 'playlists'].map(tab => (
               <button

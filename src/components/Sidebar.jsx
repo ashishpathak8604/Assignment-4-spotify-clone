@@ -1,5 +1,8 @@
 import { FaHome, FaSearch, FaBook, FaPlus, FaHeart } from "react-icons/fa";
 import React from "react";
+import { useNavigate } from 'react-router-dom';
+
+
 import logo1 from '../assets/logo1.png';
 const playlists = [
   "Daily Mix 1",
@@ -26,10 +29,10 @@ export default function Sidebar() {
         <a href="/library" className="flex items-center gap-3 text-white/90 hover:text-white font-medium">
           <FaBook /> Your Library
         </a>
-        <a href="#" className="flex items-center gap-3 text-white/90 hover:text-white font-medium">
+        <a href="/playlist/:id" className="flex items-center gap-3 text-white/90 hover:text-white font-medium">
           <FaPlus /> Create Playlist
         </a>
-        <a href="#" className="flex items-center gap-3 text-white/90 hover:text-white font-medium">
+        <a href="/liked-songs" className="flex items-center gap-3 text-white/90 hover:text-white font-medium">
           <FaHeart /> Liked Songs
         </a>
       </nav>

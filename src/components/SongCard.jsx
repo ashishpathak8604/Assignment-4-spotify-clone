@@ -1,13 +1,37 @@
-export default function SongCard({ name, artist, image, circle }) {
+import { usePlayer } from '../context/PlayerContext';
+
+const SongCard = ({ name, artist, image, trackUrl, circle }) => {
+  const { playTrack } = usePlayer();
+
+  const handlePlay = () => {
+    playTrack({
+      name,
+      artist,
+      image,
+      trackUrl,
+    });
+  };
+
   return (
-    <div className="flex flex-col items-center min-w-[120px]">
+    <div
+      onClick={handlePlay}
+      className="cursor-pointer rounded-xl p-4 hover:scale-105 transition backdrop-blur-md bg-white/5 hover:bg-white/10 shadow-md flex flex-col items-center w-44"
+    >
       <img
-        src={image || "/assets/default-cover.jpg"}
+        src={image}
         alt={name}
-        className={`mb-2 ${circle ? "rounded-full" : "rounded-lg"} w-20 h-20 object-cover border-2 border-white/20`}
+        className={`${
+          circle ? 'rounded-full' : 'rounded-lg'
+        } w-36 h-36 object-cover shadow-lg`}
       />
-      <div className="text-white text-sm font-medium">{name}</div>
-      <div className="text-white/70 text-xs">{artist}</div>
+      <h4 className="text-white font-semibold mt-3 text-center w-full truncate">
+        {name}
+      </h4>
+      <p className="text-gray-300 text-sm text-center w-full truncate">
+        {artist}
+      </p>
     </div>
   );
-}
+};
+
+export default SongCard;

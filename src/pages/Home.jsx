@@ -1,37 +1,69 @@
 // src/pages/Home.jsx
-import { useEffect, useState } from 'react';
-import Sidebar from '../components/Sidebar';
-import Topbar from '../components/Topbar';
-import PlaylistCard from '../components/PlaylistCard';
-import GenreCard from '../components/GenreCard';
-import SongCard from '../components/SongCard';
-import AudioPlayer from '../components/AudioPlayer';
-import { fetchAlbumsByIds } from '../api/musicApi';
+import { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
+import PlaylistCard from "../components/PlaylistCard";
+import GenreCard from "../components/GenreCard";
+import SongCard from "../components/SongCard";
+import AudioPlayer from "../components/AudioPlayer";
+import { fetchAlbumsByIds } from "../api/musicApi";
 
+// Dummy data for playlists and genres
 const trendingPlaylists = [
-  { title: "Today's Hits", desc: "The hottest tracks right now", image: '/assets/todays-hits.jpg' },
-  { title: "Viral Hits", desc: "Top trending songs worldwide", image: '/assets/viral-hits.jpg' },
-  { title: "Mood Booster", desc: "Feel good with these tracks", image: '/assets/mood-booster.jpg' },
+  {
+    title: "Today's Hits",
+    desc: "The hottest tracks right now",
+    image: "/assets/todays-hits.jpg",
+  },
+  {
+    title: "Viral Hits",
+    desc: "Top trending songs worldwide",
+    image: "/assets/viral-hits.jpg",
+  },
+  {
+    title: "Mood Booster",
+    desc: "Feel good with these tracks",
+    image: "/assets/mood-booster.jpg",
+  },
 ];
 
 const genres = [
-  { name: 'Pop', color: 'from-pink-500 to-purple-500' },
-  { name: 'Hip-Hop', color: 'from-blue-400 to-blue-600' },
-  { name: 'Rock', color: 'from-orange-400 to-orange-600' },
-  { name: 'Electronic', color: 'from-green-400 to-green-600' },
-  { name: 'Jazz', color: 'from-yellow-400 to-yellow-600' },
+  { name: "Pop", color: "from-pink-500 to-purple-500" },
+  { name: "Hip-Hop", color: "from-blue-400 to-blue-600" },
+  { name: "Rock", color: "from-orange-400 to-orange-600" },
+  { name: "Electronic", color: "from-green-400 to-green-600" },
+  { name: "Jazz", color: "from-yellow-400 to-yellow-600" },
 ];
 
 export default function Home() {
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  const [topTracks, setTopTracks] = useState([]);
 
+  // ✅ Fetch Trending Tracks from Audius
+  useEffect(() => {
+    const fetchTrendingTracks = async () => {
+      try {
+        const res = await fetch(
+          "https://api.audius.co/v1/tracks/trending?app_name=spotify_clone"
+        );
+        const data = await res.json();
+        setTopTracks(data.data.slice(0, 6));
+      } catch (error) {
+        console.error("Error fetching trending tracks:", error);
+      }
+    };
+
+    fetchTrendingTracks();
+  }, []);
+
+  // ✅ Fetch Recently Played Albums (From Spotify or Mock)
   useEffect(() => {
     const loadAlbums = async () => {
-      const accessToken = import.meta.env.VITE_SPOTIFY_TOKEN; // or hardcode it for testing
+      const accessToken = import.meta.env.VITE_SPOTIFY_TOKEN;
       const ids = [
-        '382ObEPsp2rxGrnsizN5TX',
-        '1A2GTWGtFfWp7KSQTwWOyo',
-        '2noRn2Aes5aoNVsU6iWThc',
+        "382ObEPsp2rxGrnsizN5TX",
+        "1A2GTWGtFfWp7KSQTwWOyo",
+        "2noRn2Aes5aoNVsU6iWThc",
       ];
       const albums = await fetchAlbumsByIds(ids, accessToken);
       setRecentlyPlayed(albums);
@@ -53,30 +85,44 @@ export default function Home() {
               style={{
                 backgroundImage:
                   "linear-gradient(to right, rgba(124,58,237,0.4), rgba(236,72,153,0.4), rgba(59,130,246,0.4)), url('/assets/weekly-discovery.jpg')",
-                backgroundSize: 'cover',
               }}
             >
-              <span className="absolute top-4 left-4 bg-green-400 text-xs px-3 py-1 rounded-full text-white font-bold">FEATURED</span>
+              <span className="absolute top-4 left-4 bg-green-400 text-xs px-3 py-1 rounded-full text-white font-bold">
+                FEATURED
+              </span>
               <div>
-                <h2 className="text-3xl font-bold text-white mb-2">Weekly Discovery</h2>
-                <p className="text-white text-lg">Your personalized mix of fresh music</p>
+                <h2 className="text-3xl font-bold text-white mb-2">
+                  Weekly Discovery
+                </h2>
+                <p className="text-white text-lg">
+                  Your personalized mix of fresh music
+                </p>
               </div>
             </div>
           </section>
 
           {/* Trending Now */}
           <section className="mb-8">
-            <h3 className="text-xl font-semibold text-white mb-4">Trending Now</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Trending Now
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {trendingPlaylists.map((pl, idx) => (
-                <PlaylistCard key={idx} title={pl.title} desc={pl.desc} image={pl.image} />
+                <PlaylistCard
+                  key={idx}
+                  title={pl.title}
+                  desc={pl.desc}
+                  image={pl.image}
+                />
               ))}
             </div>
           </section>
 
-          {/* Browse All Genres */}
+          {/* Browse Genres */}
           <section className="mb-8">
-            <h3 className="text-xl font-semibold text-white mb-4">Browse All</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Browse All
+            </h3>
             <div className="flex flex-wrap gap-4">
               {genres.map((genre, idx) => (
                 <GenreCard key={idx} name={genre.name} gradient={genre.color} />
@@ -84,16 +130,38 @@ export default function Home() {
             </div>
           </section>
 
+          {/* 🔥 Top Tracks from Audius */}
+          <section className="mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Top Tracks
+            </h3>
+            <div className="flex flex-wrap gap-6 justify-center">
+              {topTracks.map((track) => (
+                <SongCard
+                  key={track.id}
+                  name={track.title}
+                  artist={track.user?.name || "Unknown Artist"}
+                  image={track.artwork?.["150x150"] || "/assets/default.jpg"}
+                  trackUrl={`https://api.audius.co/v1/tracks/${track.id}/stream?app_name=spotify_clone`}
+                  circle
+                />
+              ))}
+            </div>
+          </section>
+
           {/* Recently Played */}
           <section>
-            <h3 className="text-xl font-semibold text-white mb-4">Recently Played</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Recently Played
+            </h3>
             <div className="flex gap-4 overflow-x-auto">
-              {recentlyPlayed.map((album, idx) => (
+              {recentlyPlayed.map((album) => (
                 <SongCard
                   key={album.id}
                   name={album.name}
-                  artist={album.artists.map(a => a.name).join(', ')}
+                  artist={album.artists.map((a) => a.name).join(", ")}
                   image={album.images?.[0]?.url}
+                  trackUrl={album.preview_url || ""} // Optional, depends on data
                   circle
                 />
               ))}
